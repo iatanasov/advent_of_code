@@ -1,7 +1,7 @@
 use std::fs;
 use std::path::PathBuf;
 use clap::{Parser};
-use color_eyre::Report;
+use color_eyre::{eyre::eyre,Report};
 use tracing_subscriber;
 use tracing_subscriber::EnvFilter;
 mod y2022;
@@ -46,13 +46,10 @@ fn main() -> Result<(),Report> {
                 1 => y2022::day1::execute(content, args.part),
                 2 => y2022::day2::execute(content, args.part),
                 3 => y2022::day3::execute(content, args.part),
-                //"4" => days::day4::execute(content),
-                //"5" => days::day5::execute(content),
-                //"6" => days::day6::execute(content),
-                //"7" => days::day7::execute(content),
-                //"8" => days::day8::execute(content),
+                4 => y2022::day4::execute(content, args.part),
+                5 => y2022::day5::execute(content, args.part),
                 //"9" => day9(content),
-                _ => return Ok(())
+                _ => return Err(eyre!("Error Not Implemented"))
             }
         }
         _ => return Ok(())
