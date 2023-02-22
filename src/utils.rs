@@ -1,11 +1,33 @@
 use clap::ValueEnum;
 use color_eyre::Report;
 use color_eyre::eyre::eyre;
+use std::fmt;
 
 #[derive(ValueEnum, Clone, Debug, Copy)]
 pub enum Part {
     One,
     Two
+}
+
+#[derive(ValueEnum, Clone, Debug, Copy)]
+pub enum LocalLogLevel {
+   Error,
+    Warn,
+    Info,
+    Debug,
+    Trace,
+}
+
+impl fmt::Display for LocalLogLevel {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            LocalLogLevel::Error => write!(f,"error"),
+            LocalLogLevel::Warn => write!(f,"warn"),
+            LocalLogLevel::Info => write!(f,"info"),
+            LocalLogLevel::Debug => write!(f,"debug"),
+            LocalLogLevel::Trace => write!(f,"trace"),
+        }
+    }
 }
 
 #[allow(dead_code)]
@@ -20,11 +42,6 @@ impl SolveDay for Day {
         return self.part
     }
 }
-
-//fn dowork() {
-//    let d = Day { content: String::from("aaa"), part: Part::One };
-//    SolveDay::execute(&d);
-///}
 
 trait SolveDay {
     
