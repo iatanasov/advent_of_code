@@ -54,6 +54,9 @@ fn main() -> Result<(),Report> {
                 6 => y2022::day6::execute(content, args.part),
                 7 => y2022::day7::execute(content, args.part),
                 8 => y2022::day8::execute(content, args.part),
+                9 => y2022::day9::execute(content, args.part),
+                10 => y2022::day10::execute(content, args.part),
+
                 //"9" => day9(content),
                 _ => return Err(eyre!("Error Not Implemented"))
             }
