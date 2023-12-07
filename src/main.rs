@@ -5,6 +5,7 @@ use color_eyre::{eyre::eyre,Report};
 use tracing_subscriber;
 use tracing_subscriber::EnvFilter;
 mod y2022;
+mod y2023;
 use aoc_2022::utils::{Part, LocalLogLevel};
 
 #[derive(Parser, Debug)]
@@ -58,6 +59,14 @@ fn main() -> Result<(),Report> {
                 10 => y2022::day10::execute(content, args.part),
 
                 //"9" => day9(content),
+                _ => return Err(eyre!("Error Not Implemented"))
+            }
+        }
+        2023 => {
+            match args.day {
+                1 => y2023::day1::execute(content, args.part),
+                2 => y2023::day2::execute(content, args.part),
+                3 => y2023::day3::execute(content, args.part),
                 _ => return Err(eyre!("Error Not Implemented"))
             }
         }
