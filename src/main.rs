@@ -35,6 +35,7 @@ fn setup(args: &Cli) -> Result<(), Report> {
 
     tracing_subscriber::fmt::fmt()
         .with_env_filter(EnvFilter::from_default_env())
+        .with_ansi(false)
         .init();
     Ok(())
 }
@@ -67,6 +68,8 @@ fn main() -> Result<(),Report> {
                 1 => y2023::day1::execute(content, args.part),
                 2 => y2023::day2::execute(content, args.part),
                 3 => y2023::day3::execute(content, args.part),
+                4 => y2023::day4::execute(content, args.part),
+                5 => y2023::day5::execute(content, args.part),
                 _ => return Err(eyre!("Error Not Implemented"))
             }
         }

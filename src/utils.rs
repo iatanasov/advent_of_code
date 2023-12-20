@@ -61,3 +61,10 @@ trait SolveDay {
         Err(eyre!("Part 2 is not implemented"))
     }
 }
+
+pub fn to_digits(chars: &Vec<char>) -> usize {
+    return format!("{}",chars.iter().collect::<String>()).parse::<usize>().unwrap();
+}
+pub fn str_to_digits<S: Into<String>>(s: S) -> usize {
+    return format!("{}",s.into()).parse::<usize>().unwrap();
+}
