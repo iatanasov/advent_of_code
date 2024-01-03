@@ -70,6 +70,17 @@ fn main() -> Result<(),Report> {
                 3 => y2023::day3::execute(content, args.part),
                 4 => y2023::day4::execute(content, args.part),
                 5 => y2023::day5::execute(content, args.part),
+                6 => y2023::day6::execute(content, args.part),
+                7 => y2023::day7::execute(content, args.part),
+                8 => y2023::day8::execute(content, args.part),
+                9 => y2023::day9::execute(content, args.part),
+                10 => y2023::day10::execute(content, args.part),
+                11 => y2023::day11::execute(content, args.part),
+                12 => y2023::day12::execute(content, args.part),
+                13 => y2023::day13::execute(content, args.part),
+                14 => y2023::day14::execute(content, args.part),
+                15 => y2023::day15::execute(content, args.part),
+                16 => y2023::day16::execute(content, args.part),
                 _ => return Err(eyre!("Error Not Implemented"))
             }
         }

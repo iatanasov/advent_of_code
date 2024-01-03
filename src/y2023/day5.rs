@@ -37,7 +37,7 @@ pub fn part1(content: String) -> Result<(), Report> {
         seeds.push(vec![str_to_digits(seed)]);
     }
     lines.next();
-    let mut level = 0;
+    let mut level = 0; 
     let mut ranges: Vec<Vec<usize>> = Vec::new();
     loop {
         let res = lines.next();
