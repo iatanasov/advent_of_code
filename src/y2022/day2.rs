@@ -1,6 +1,5 @@
 use tracing::info;
 use color_eyre::Report;
-use color_eyre::eyre::eyre;
 use aoc_2022::utils::Part;
 
 

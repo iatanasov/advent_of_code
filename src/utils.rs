@@ -68,3 +68,6 @@ pub fn to_digits(chars: &Vec<char>) -> usize {
 pub fn str_to_digits<S: Into<String>>(s: S) -> usize {
     return format!("{}",s.into()).parse::<usize>().unwrap();
 }
+pub fn str_to_isize<S: Into<String>>(s: S) -> isize {
+    return format!("{}",s.into()).parse::<isize>().unwrap();
+}

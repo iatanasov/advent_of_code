@@ -1,4 +1,3 @@
-use tracing::info;
 use color_eyre::Report;
 use aoc_2022::utils::Part;
 use std::collections::HashMap;
