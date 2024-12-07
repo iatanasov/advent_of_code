@@ -1,12 +1,12 @@
 #![allow(dead_code)]
 #![allow(unused_variables)]
-use tracing::info;
-use color_eyre::Report;
 use aoc_2022::utils::Part;
-
+use color_eyre::Report;
+use std::collections::HashMap;
+use tracing::info;
 
 pub fn execute(content: String, part: Part) -> Result<(), Report> {
-    info!("Running {:?} ",part);
+    info!("Running {:?} ", part);
     match part {
         Part::One => part1(content),
         Part::Two => part2(content),
