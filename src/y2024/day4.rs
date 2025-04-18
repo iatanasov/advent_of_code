@@ -2,7 +2,6 @@
 #![allow(unused_variables)]
 use aoc_2022::utils::Part;
 use color_eyre::Report;
-use std::collections::HashMap;
 use tracing::info;
 
 pub fn execute(content: String, part: Part) -> Result<(), Report> {
@@ -20,4 +19,12 @@ pub fn part1(content: String) -> Result<(), Report> {
 #[allow(unused_variables)]
 pub fn part2(content: String) -> Result<(), Report> {
     Ok(())
+}
+
+fn count_xmas_in_line(line: Vec<char>) -> usize {
+    let mut n = 0;
+    for c in line {
+        if c == 'X' {}
+    }
+    1
 }

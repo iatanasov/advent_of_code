@@ -1,9 +1,7 @@
-#![allow(dead_code)]
-#![allow(unused_variables)]
 use aoc_2022::utils::Part;
 use color_eyre::Report;
 use regex::Regex;
-use std::{collections::HashMap, sync::OnceLock};
+use std::sync::OnceLock;
 use tracing::info;
 
 fn memory_regex() -> &'static Regex {
