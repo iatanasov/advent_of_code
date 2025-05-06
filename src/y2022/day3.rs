@@ -1,7 +1,7 @@
-use tracing::info;
+use aoc::utils::Part;
 use color_eyre::Report;
-use aoc_2022::utils::Part;
 use std::collections::HashMap;
+use tracing::info;
 
 pub fn execute(content: String, part: Part) -> Result<(), Report> {
     match part {
@@ -12,12 +12,12 @@ pub fn execute(content: String, part: Part) -> Result<(), Report> {
 fn gen_priotiry() -> HashMap<char, usize> {
     let mut priority = (b'a'..=b'z').map(char::from).collect::<Vec<_>>();
     priority.append(&mut (b'A'..=b'Z').map(char::from).collect::<Vec<_>>());
-    let mut pmap: HashMap<char,usize> = HashMap::new();
-    for (i,p) in priority.into_iter().enumerate() {
-        pmap.insert(p,i+1);
+    let mut pmap: HashMap<char, usize> = HashMap::new();
+    for (i, p) in priority.into_iter().enumerate() {
+        pmap.insert(p, i + 1);
     }
 
-    return pmap
+    return pmap;
 }
 
 pub fn part2(content: String) -> Result<(), Report> {
@@ -33,19 +33,22 @@ pub fn part2(content: String) -> Result<(), Report> {
                 continue;
             }
             uniq.push(i);
-            let val =  group_badges.get(&i);
+            let val = group_badges.get(&i);
             match val {
-                Some(&n) => group_badges.insert(i.to_owned(),n+1),
-                None => {
-                    group_badges.insert(i,1)
-                }
+                Some(&n) => group_badges.insert(i.to_owned(), n + 1),
+                None => group_badges.insert(i, 1),
             };
         }
         uniq = vec![];
         if group_n == 3 {
-            for (ch,n) in group_badges.iter() {
+            for (ch, n) in group_badges.iter() {
                 if *n == 3 {
-                    info!("Found {} n {} priority {}",&ch,&n, priority.get(&ch).unwrap());
+                    info!(
+                        "Found {} n {} priority {}",
+                        &ch,
+                        &n,
+                        priority.get(&ch).unwrap()
+                    );
                     sum += priority.get(&ch).unwrap();
                     break;
                 }
@@ -62,22 +65,21 @@ pub fn part1(content: String) -> Result<(), Report> {
     let priority = gen_priotiry();
     let mut wrong_items: Vec<char> = vec![];
     for l in content.lines() {
-        let side_one=&l[0..l.len()/2];
-        let side_two=&l[l.len()/2..];
+        let side_one = &l[0..l.len() / 2];
+        let side_two = &l[l.len() / 2..];
         for i in side_one.chars() {
             let mut found = false;
             for j in side_two.chars() {
                 if i == j {
                     wrong_items.push(i);
                     found = true;
-                    break; 
+                    break;
                 }
             }
             if found {
                 break;
             }
         }
-
     }
     let mut sum = 0;
     for w in wrong_items {

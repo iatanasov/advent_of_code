@@ -1,7 +1,6 @@
-use tracing::info;
+use aoc::utils::Part;
 use color_eyre::Report;
-use aoc_2022::utils::Part;
-
+use tracing::info;
 
 pub fn execute(content: String, part: Part) -> Result<(), Report> {
     match part {
@@ -15,19 +14,19 @@ pub fn part1(content: String) -> Result<(), Report> {
     let frame: &mut Vec<char> = &mut vec![];
     for l in content.lines() {
         for c in l.chars() {
-            frame.insert(0,c);
+            frame.insert(0, c);
             count += 1;
             if frame.len() > 4 {
-                frame.pop(); 
+                frame.pop();
             }
             if frame.len() < 4 {
-                continue
+                continue;
             }
             let mut uniq = true;
             info!("frame {:?} ", frame);
             for i in 0..frame.len() {
-                for j in i+1..frame.len() {
-                    info!(" {} {} ",i, j);
+                for j in i + 1..frame.len() {
+                    info!(" {} {} ", i, j);
                     if frame[i] == frame[j] {
                         uniq = false;
                     }
@@ -37,7 +36,7 @@ pub fn part1(content: String) -> Result<(), Report> {
                 info!("Start point {} ", count);
                 break;
             }
-        }    
+        }
     }
     Ok(())
 }
@@ -46,17 +45,17 @@ pub fn part2(content: String) -> Result<(), Report> {
     let frame: &mut Vec<char> = &mut vec![];
     for l in content.lines() {
         for c in l.chars() {
-            frame.insert(0,c);
+            frame.insert(0, c);
             count += 1;
             if frame.len() > 14 {
-                frame.pop(); 
+                frame.pop();
             }
             if frame.len() < 14 {
-                continue
+                continue;
             }
             let mut uniq = true;
             for i in 0..frame.len() {
-                for j in i+1..frame.len() {
+                for j in i + 1..frame.len() {
                     if frame[i] == frame[j] {
                         uniq = false;
                     }
@@ -66,7 +65,7 @@ pub fn part2(content: String) -> Result<(), Report> {
                 info!("Start point {} ", count);
                 break;
             }
-        }    
+        }
     }
     Ok(())
 }

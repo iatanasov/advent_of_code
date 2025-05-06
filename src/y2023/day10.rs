@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 #![allow(unused_variables)]
-use aoc_2022::utils::Part;
+use aoc::utils::Part;
 use color_eyre::Report;
 use tracing::info;
 
@@ -21,7 +21,7 @@ struct Tile {
 
 impl Tile {
     fn new(y: usize, x: usize, d: char) -> Self {
-        return Tile { y, x, d };
+        Tile { y, x, d }
     }
 }
 
@@ -32,13 +32,13 @@ pub fn part1(content: String) -> Result<(), Report> {
         layout.push(l.chars().collect());
     }
     let mut start = find_s_index(&layout);
-    let mut prev = start.clone();
+    let mut prev = start;
     let mut count = 0;
     println!("{:?}", start);
     loop {
-        let mut next = find_next(start, prev, &layout);
+        let next = find_next(start, prev, &layout);
         count += 1;
-        if next == None || next.unwrap().d == 'S' {
+        if next.is_none() || next.unwrap().d == 'S' {
             info!("Exit because {:?}", next);
             info!("{} {}", count, count / 2 + count % 1);
             break;

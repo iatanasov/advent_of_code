@@ -1,12 +1,11 @@
 #![allow(dead_code)]
 #![allow(unused_variables)]
-use tracing::{info, debug};
+use aoc::utils::Part;
 use color_eyre::Report;
-use aoc_2022::utils::Part;
-
+use tracing::{debug, info};
 
 pub fn execute(content: String, part: Part) -> Result<(), Report> {
-    info!("Running {:?} ",part);
+    info!("Running {:?} ", part);
     match part {
         Part::One => part1(content),
         Part::Two => part2(content),
@@ -15,25 +14,30 @@ pub fn execute(content: String, part: Part) -> Result<(), Report> {
 
 fn is_visible(top: i32, left: i32, mid: i32, right: i32, bottom: i32) -> bool {
     let mut visible = false;
-    if mid > top ||
-        mid > left ||
-        mid > right ||
-        mid > bottom {
+    if mid > top || mid > left || mid > right || mid > bottom {
         visible = true;
     }
-    debug!("{} {} [{}] {} {} res: {}", top, left,  mid, right, bottom, visible);
-    return visible
+    debug!(
+        "{} {} [{}] {} {} res: {}",
+        top, left, mid, right, bottom, visible
+    );
+    return visible;
 }
 
 #[allow(unused_variables)]
 pub fn part1(content: String) -> Result<(), Report> {
     let mut count: usize = 0;
-    let mut lines: Vec<Vec<i32>>  = vec![];
+    let mut lines: Vec<Vec<i32>> = vec![];
     for l in content.lines() {
-        lines.push(l.chars().into_iter().map(|c| c.to_digit(10).unwrap() as i32).collect());
+        lines.push(
+            l.chars()
+                .into_iter()
+                .map(|c| c.to_digit(10).unwrap() as i32)
+                .collect(),
+        );
     }
     debug!("{:?}", lines);
-    let line_len = lines[0].len(); 
+    let line_len = lines[0].len();
     info!("line length: {}", line_len);
     let mut max_top_line: Vec<i32> = vec![-1; line_len];
     let mut max_left: Vec<i32> = vec![-1; lines.len()];
@@ -44,23 +48,23 @@ pub fn part1(content: String) -> Result<(), Report> {
             let left = max_left[i];
             let top = max_top_line[j];
             let mut right = -1;
-            if j < line_len-1 {
-                for k in j+1..line_len {
+            if j < line_len - 1 {
+                for k in j + 1..line_len {
                     if current_line[k] >= right {
                         right = current_line[k];
                     }
                 }
             }
             let mut bottom = -1;
-            if i < lines.len()-1 {
-                for k in i+1..lines.len() {
+            if i < lines.len() - 1 {
+                for k in i + 1..lines.len() {
                     if lines[k][j] >= bottom {
                         bottom = lines[k][j];
                     }
                 }
             }
-            if is_visible(top, left,mid, right, bottom) {
-                count +=1;
+            if is_visible(top, left, mid, right, bottom) {
+                count += 1;
             }
             if mid >= max_left[i] {
                 max_left[i] = mid;
@@ -76,10 +80,15 @@ pub fn part1(content: String) -> Result<(), Report> {
 }
 pub fn part2(content: String) -> Result<(), Report> {
     let mut max_score: usize = 0;
-    let mut index = (0,0);
-    let mut lines: Vec<Vec<i32>>  = vec![];
+    let mut index = (0, 0);
+    let mut lines: Vec<Vec<i32>> = vec![];
     for l in content.lines() {
-        lines.push(l.chars().into_iter().map(|c| c.to_digit(10).unwrap() as i32).collect());
+        lines.push(
+            l.chars()
+                .into_iter()
+                .map(|c| c.to_digit(10).unwrap() as i32)
+                .collect(),
+        );
     }
     debug!("{:?}", lines);
     let line_len = lines[0].len();
@@ -90,14 +99,14 @@ pub fn part2(content: String) -> Result<(), Report> {
         for j in 0..line_len {
             let mid = current_line[j];
             let mut right_score = 0;
-            for k in j+1..line_len  {
+            for k in j + 1..line_len {
                 if current_line[k] >= mid {
                     right_score = k - j;
                     break;
                 }
             }
             if right_score == 0 {
-                right_score = max_lines - ( j + 1);
+                right_score = max_lines - (j + 1);
             }
             let mut left_score = j;
             for k in (0..j).rev() {
@@ -106,8 +115,8 @@ pub fn part2(content: String) -> Result<(), Report> {
                     break;
                 }
             }
-            let mut bottom_score= 0;
-            for k in i+1..max_lines {
+            let mut bottom_score = 0;
+            for k in i + 1..max_lines {
                 if lines[k][j] >= mid {
                     bottom_score = k - i;
                     break;
@@ -116,23 +125,32 @@ pub fn part2(content: String) -> Result<(), Report> {
             if bottom_score == 0 {
                 bottom_score = max_lines - (i + 1);
             }
-            let mut top_score= i;
+            let mut top_score = i;
             for k in (0..i).rev() {
                 if lines[k][j] >= mid {
                     top_score = i - k;
                     break;
                 }
             }
-            debug!("value: {} , r:{} l:{} b:{} t:{} ",lines[i][j],right_score,left_score, bottom_score, top_score);
+            debug!(
+                "value: {} , r:{} l:{} b:{} t:{} ",
+                lines[i][j], right_score, left_score, bottom_score, top_score
+            );
             let score = right_score * left_score * bottom_score * top_score;
             if score > max_score {
-                debug!("max score: {} value: {} , r:{} l:{} b:{} t:{} ",score,lines[i][j],right_score,left_score, bottom_score, top_score);
-                index = (i,j);
+                debug!(
+                    "max score: {} value: {} , r:{} l:{} b:{} t:{} ",
+                    score, lines[i][j], right_score, left_score, bottom_score, top_score
+                );
+                index = (i, j);
                 max_score = score
             }
         }
     }
-    info!("Index: {} {} Item : {}",index.0, index.1 , lines[index.0][index.1]);
+    info!(
+        "Index: {} {} Item : {}",
+        index.0, index.1, lines[index.0][index.1]
+    );
     info!("Result: {} ", max_score);
     Ok(())
 }

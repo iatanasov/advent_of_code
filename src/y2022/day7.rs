@@ -1,10 +1,10 @@
 #![allow(dead_code)]
 #![allow(unused_variables)]
-use tracing::{info, debug};
+use aoc::utils::Part;
 use color_eyre::Report;
-use aoc_2022::utils::Part;
 use std::cell::RefCell;
 use std::rc::Rc;
+use tracing::{debug, info};
 
 use regex::Regex;
 
@@ -23,7 +23,7 @@ pub enum FsType {
 #[derive(Debug, PartialEq)]
 pub enum CmdMode {
     Ls,
-    Cd
+    Cd,
 }
 
 #[derive(Debug)]
@@ -32,16 +32,16 @@ pub struct FsNode {
     size: usize,
     fs_type: FsType,
     children: Vec<Rc<RefCell<FsNode>>>,
-    parent: Option<Rc<RefCell<FsNode>>>
+    parent: Option<Rc<RefCell<FsNode>>>,
 }
 
 impl FsNode {
     pub fn new(
-                name: String,
-                size: usize,
-                fs_type: FsType,
-                parent: Option<Rc<RefCell<FsNode>>>) -> FsNode
-    {
+        name: String,
+        size: usize,
+        fs_type: FsType,
+        parent: Option<Rc<RefCell<FsNode>>>,
+    ) -> FsNode {
         FsNode {
             name,
             size,
@@ -51,7 +51,7 @@ impl FsNode {
         }
     }
 
-    pub fn new_file(name: String,size: usize) -> FsNode {
+    pub fn new_file(name: String, size: usize) -> FsNode {
         FsNode {
             name,
             size,
@@ -71,7 +71,7 @@ impl FsNode {
                 return Some(Rc::clone(&child));
             }
         }
-        return None
+        return None;
     }
     pub fn has_child(&self, name: String) -> bool {
         let mut has = false;
@@ -91,10 +91,13 @@ impl FsNode {
             }
             self.size = size;
         } else {
-            debug!("File {} with size {} {:?}", self.name, self.size, self.fs_type);
+            debug!(
+                "File {} with size {} {:?}",
+                self.name, self.size, self.fs_type
+            );
         }
-    
-        return self.size
+
+        return self.size;
     }
 
     pub fn filter_by_size(&self, size: usize) -> Vec<usize> {
@@ -131,15 +134,14 @@ impl FsNode {
     pub fn print_tree(&self, depth: usize) {
         //println!(" {} {} {:?} {}", "---".repeat(depth), self.name, self.fs_type, self.size);
         for child in &self.children {
-            child.borrow().print_tree(depth+1);
+            child.borrow().print_tree(depth + 1);
         }
     }
 }
 
-pub fn new_node(node: FsNode) -> Rc<RefCell<FsNode>>{
+pub fn new_node(node: FsNode) -> Rc<RefCell<FsNode>> {
     Rc::new(RefCell::new(node))
 }
-
 
 pub fn build_tree(content: String) -> Rc<RefCell<FsNode>> {
     let cd_re = Regex::new(r"^\$\s+cd\s+([\w+\.]+)").unwrap();
@@ -155,15 +157,17 @@ pub fn build_tree(content: String) -> Rc<RefCell<FsNode>> {
                 ".." => Rc::clone(cur_dir.borrow_mut().parent.as_ref().unwrap()),
                 x => {
                     if !cur_dir.borrow_mut().has_child(String::from(x)) {
-                        cur_dir.borrow_mut().add_child(
-                            FsNode::new(
-                                String::from(&cap[1]), 0, FsType::Dir, Some(Rc::clone(&cur_dir))
-                            ))
+                        cur_dir.borrow_mut().add_child(FsNode::new(
+                            String::from(&cap[1]),
+                            0,
+                            FsType::Dir,
+                            Some(Rc::clone(&cur_dir)),
+                        ))
                     }
                     cur_dir.borrow_mut().find_child(String::from(x)).unwrap()
                 }
             };
-            debug!("{:?}",&cap[1]);
+            debug!("{:?}", &cap[1]);
             mode = CmdMode::Cd;
             continue;
         } else if ls_re.is_match(l) {
@@ -172,10 +176,10 @@ pub fn build_tree(content: String) -> Rc<RefCell<FsNode>> {
             if mode == CmdMode::Ls {
                 if let Some(cap) = f_re.captures(l) {
                     if "dir" != &cap[1] {
-                        cur_dir.borrow_mut().add_child(
-                            FsNode::new_file(String::from(&cap[2]),cap[1].parse::<usize>().unwrap())
-                        )
-                        
+                        cur_dir.borrow_mut().add_child(FsNode::new_file(
+                            String::from(&cap[2]),
+                            cap[1].parse::<usize>().unwrap(),
+                        ))
                     }
                 }
             }
@@ -187,12 +191,11 @@ pub fn build_tree(content: String) -> Rc<RefCell<FsNode>> {
 pub fn part1(content: String) -> Result<(), Report> {
     let root = build_tree(content);
     info!("Total Size: {}", root.borrow_mut().recalc_size());
-    let sizes = root.borrow().filter_by_size(100000); 
+    let sizes = root.borrow().filter_by_size(100000);
     root.borrow().print_tree(0);
     info!("Size : {}", sizes.iter().sum::<usize>());
     Ok(())
 }
-
 
 pub fn part2(content: String) -> Result<(), Report> {
     let root = build_tree(content);
@@ -201,7 +204,7 @@ pub fn part2(content: String) -> Result<(), Report> {
     let current = root.borrow().size;
     let free_space = 30000000 - (total - current);
     debug!("Space needed {}", free_space);
-    let mut sizes = root.borrow().filter_by_size_ge(free_space); 
+    let mut sizes = root.borrow().filter_by_size_ge(free_space);
     sizes.sort();
     info!("Result: {}", sizes.pop().unwrap());
     Ok(())

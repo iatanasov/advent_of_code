@@ -1,4 +1,4 @@
-use aoc_2022::utils::Part;
+use aoc::utils::Part;
 use color_eyre::Report;
 use regex::Regex;
 use std::sync::OnceLock;

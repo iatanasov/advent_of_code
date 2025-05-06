@@ -1,8 +1,7 @@
 #![allow(dead_code)]
 #![allow(unused_variables)]
-use aoc_2022::utils::Part;
+use aoc::utils::Part;
 use color_eyre::Report;
-use std::collections::HashMap;
 use tracing::info;
 
 pub fn execute(content: String, part: Part) -> Result<(), Report> {

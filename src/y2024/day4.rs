@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 #![allow(unused_variables)]
-use aoc_2022::utils::Part;
+use aoc::utils::Part;
 use color_eyre::Report;
 use tracing::info;
 
@@ -22,7 +22,6 @@ pub fn part2(content: String) -> Result<(), Report> {
 }
 
 fn count_xmas_in_line(line: Vec<char>) -> usize {
-    let mut n = 0;
     for c in line {
         if c == 'X' {}
     }

@@ -1,4 +1,3 @@
-#![allow(dead_code)]
 #![allow(unused_variables)]
 use aoc::utils::Part;
 use color_eyre::Report;
@@ -14,9 +13,11 @@ pub fn execute(content: String, part: Part) -> Result<(), Report> {
 
 #[allow(unused_variables)]
 pub fn part1(content: String) -> Result<(), Report> {
+    for l in content.lines() {}
     Ok(())
 }
 #[allow(unused_variables)]
 pub fn part2(content: String) -> Result<(), Report> {
+    for l in content.lines() {}
     Ok(())
 }

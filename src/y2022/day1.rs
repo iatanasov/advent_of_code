@@ -1,7 +1,6 @@
-use tracing::info;
+use aoc::utils::Part;
 use color_eyre::Report;
-use aoc_2022::utils::Part;
-
+use tracing::info;
 
 pub fn execute(content: String, part: Part) -> Result<(), Report> {
     match part {
@@ -29,15 +28,15 @@ pub fn part1(content: String) -> Result<(), Report> {
 }
 
 pub fn part2(content: String) -> Result<(), Report> {
-    let mut top: Vec<usize> = vec![0,0,0];
+    let mut top: Vec<usize> = vec![0, 0, 0];
     let mut current_cal = 0;
     for l in content.lines() {
-        if l ==  "" {
+        if l == "" {
             for m in &mut top {
-                if current_cal >  *m {
-                     let current = *m;
-                     *m = current_cal;
-                     current_cal = current;
+                if current_cal > *m {
+                    let current = *m;
+                    *m = current_cal;
+                    current_cal = current;
                 }
             }
             current_cal = 0;

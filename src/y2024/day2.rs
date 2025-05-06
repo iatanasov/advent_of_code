@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 #![allow(unused_variables)]
-use aoc_2022::utils::Part;
+use aoc::utils::Part;
 use color_eyre::Report;
 use tracing::info;
 
@@ -44,6 +44,9 @@ pub fn part2(content: String) -> Result<(), Report> {
     Ok(())
 }
 
+pub fn foo() -> &'static str {
+    "foo"
+}
 pub fn is_good(report: &Vec<isize>) -> bool {
     let mut sign_num = 0;
     for (i, curr) in report.iter().enumerate() {
