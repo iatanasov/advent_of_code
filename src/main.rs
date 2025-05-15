@@ -111,6 +111,7 @@ fn main() -> Result<(), Report> {
                 Year::Y2015 => match cli.day {
                     1 => y2015::Day1 { content }.execute(part),
                     2 => y2015::Day2 { content }.execute(part),
+                    3 => y2015::Day3 { content }.execute(part),
                     _ => Err(eyre!("Error not Implemented")),
                 },
                 Year::Y2016 => match cli.day {
