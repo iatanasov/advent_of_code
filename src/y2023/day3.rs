@@ -15,10 +15,10 @@ pub fn execute(content: String, part: Part) -> Result<(), Report> {
 }
 
 fn is_symbol(s: char) -> bool {
-    if s.is_digit(10) || s == '.' {
+    if s.is_ascii_digit() || s == '.' {
         return false;
     }
-    return true;
+    true
 }
 
 fn get_range(n: usize, max: usize) -> Vec<usize> {
@@ -29,10 +29,10 @@ fn get_range(n: usize, max: usize) -> Vec<usize> {
     if n + 1 < max {
         r.push(n + 1);
     }
-    return r;
+    r
 }
 
-fn adj(engine: &Vec<Vec<char>>, i: usize, j: usize) -> bool {
+fn adj(engine: &[Vec<char>], i: usize, j: usize) -> bool {
     for n in get_range(i, engine.len()) {
         for k in get_range(j, engine[i].len()) {
             if is_symbol(engine[n][k]) {
@@ -40,7 +40,7 @@ fn adj(engine: &Vec<Vec<char>>, i: usize, j: usize) -> bool {
             }
         }
     }
-    return false;
+    false
 }
 
 #[allow(unused_variables)]
@@ -53,27 +53,31 @@ pub fn part1(content: String) -> Result<(), Report> {
     let mut num: Vec<char> = vec![];
     let mut is_adj = false;
     for i in 0..engine.len() {
-        if is_adj && num.len() > 0 {
-            sum = sum
-                + format!("{}", num.iter().collect::<String>())
-                    .parse::<usize>()
-                    .unwrap();
+        if is_adj && !num.is_empty() {
+            sum += num
+                .iter()
+                .collect::<String>()
+                .to_string()
+                .parse::<usize>()
+                .unwrap();
         }
         is_adj = false;
         num = vec![];
         for j in 0..engine[i].len() {
             let s = engine[i][j];
-            if s.is_digit(10) {
+            if s.is_ascii_digit() {
                 num.push(s);
-                if is_adj == false {
+                if !is_adj {
                     is_adj = adj(&engine, i, j);
                 }
             } else {
-                if is_adj && num.len() > 0 {
-                    sum = sum
-                        + format!("{}", num.iter().collect::<String>())
-                            .parse::<usize>()
-                            .unwrap();
+                if is_adj && !num.is_empty() {
+                    sum += num
+                        .iter()
+                        .collect::<String>()
+                        .to_string()
+                        .parse::<usize>()
+                        .unwrap();
                 }
                 is_adj = false;
                 num = vec![];
@@ -84,12 +88,9 @@ pub fn part1(content: String) -> Result<(), Report> {
     Ok(())
 }
 fn is_gear(s: char) -> bool {
-    if s == '*' {
-        return true;
-    }
-    return false;
+    s == '*'
 }
-fn gear_adj(engine: &Vec<Vec<char>>, i: usize, j: usize) -> Option<(usize, usize)> {
+fn gear_adj(engine: &[Vec<char>], i: usize, j: usize) -> Option<(usize, usize)> {
     for n in get_range(i, engine.len()) {
         for k in get_range(j, engine[i].len()) {
             if is_gear(engine[n][k]) {
@@ -97,7 +98,7 @@ fn gear_adj(engine: &Vec<Vec<char>>, i: usize, j: usize) -> Option<(usize, usize
             }
         }
     }
-    return None;
+    None
 }
 #[allow(unused_variables)]
 pub fn part2(content: String) -> Result<(), Report> {
@@ -110,13 +111,12 @@ pub fn part2(content: String) -> Result<(), Report> {
     let mut num: Vec<char> = vec![];
     let mut is_adj: Option<(usize, usize)> = None;
     for i in 0..engine.len() {
-        if is_adj.is_some() && num.len() > 0 {
+        if is_adj.is_some() && !num.is_empty() {
             let s = is_adj.unwrap();
             match gears.get_mut(&(s.0, s.1)) {
                 Some(arr) => arr.push(to_digits(&num)),
                 None => {
                     gears.insert((s.0, s.1), vec![to_digits(&num)]);
-                    ()
                 }
             }
         }
@@ -124,19 +124,18 @@ pub fn part2(content: String) -> Result<(), Report> {
         num = vec![];
         for j in 0..engine[i].len() {
             let s = engine[i][j];
-            if s.is_digit(10) {
+            if s.is_ascii_digit() {
                 num.push(s);
                 if is_adj.is_none() {
                     is_adj = gear_adj(&engine, i, j);
                 }
             } else {
-                if is_adj.is_some() && num.len() > 0 {
+                if is_adj.is_some() && !num.is_empty() {
                     let s = is_adj.unwrap();
                     match gears.get_mut(&(s.0, s.1)) {
                         Some(arr) => arr.push(to_digits(&num)),
                         None => {
                             gears.insert((s.0, s.1), vec![to_digits(&num)]);
-                            ()
                         }
                     }
                 }
@@ -147,7 +146,7 @@ pub fn part2(content: String) -> Result<(), Report> {
     }
     for (k, v) in gears.iter() {
         if v.len() > 1 {
-            product = product + v[0] * v[1];
+            product += v[0] * v[1];
         }
     }
     println!("sum: {}", product);

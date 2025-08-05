@@ -21,15 +21,19 @@ pub enum Year {
 pub struct Day {}
 
 pub trait DayParts {
-    fn execute(&self, part: Part) -> Result<(), Report> {
+    fn execute(&mut self, part: Part) -> Result<(), Report> {
         info!("Running {:?} ", part);
         match part {
             Part::One => self.part1(),
             Part::Two => self.part2(),
         }
     }
-    fn part1(&self) -> Result<(), Report>;
-    fn part2(&self) -> Result<(), Report>;
+    fn part1(&mut self) -> Result<(), Report>;
+    fn part2(&mut self) -> Result<(), Report>;
+    fn content(&mut self, content: String) -> Result<(), Report> {
+        println!("Use this to override the content with {content}");
+        Ok(())
+    }
 }
 
 impl Year {

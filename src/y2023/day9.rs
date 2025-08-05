@@ -18,10 +18,7 @@ pub fn part1(content: String) -> Result<(), Report> {
     let mut history: Vec<isize> = vec![];
     for l in content.lines() {
         let mut grid: Vec<Vec<isize>> = vec![];
-        let mut data = l
-            .split(' ')
-            .map(|x| str_to_isize(x))
-            .collect::<Vec<isize>>();
+        let mut data = l.split(' ').map(str_to_isize).collect::<Vec<isize>>();
         grid.push(data);
         let mut brk = false;
         loop {
@@ -30,7 +27,7 @@ pub fn part1(content: String) -> Result<(), Report> {
             }
             data = get_pred_vec(grid.last().unwrap());
             grid.push(data.clone());
-            brk = data.iter().find(|&&x| x != 0) == None;
+            brk = !data.iter().any(|&x| x != 0);
         }
         let glen = grid.len();
         for n in (0..grid.len()).rev() {
@@ -46,7 +43,7 @@ pub fn part1(content: String) -> Result<(), Report> {
             println!("{:?}", g);
         }
         history.push(*grid[0].last().unwrap());
-        sum = sum + grid[0].last().unwrap();
+        sum += grid[0].last().unwrap();
         println!("Temp {}", sum);
     }
 
@@ -54,13 +51,13 @@ pub fn part1(content: String) -> Result<(), Report> {
     println!("{}", sum);
     Ok(())
 }
-fn get_pred_vec(data: &Vec<isize>) -> Vec<isize> {
+fn get_pred_vec(data: &[isize]) -> Vec<isize> {
     let mut ret_v: Vec<isize> = vec![];
     for wind in data.windows(2) {
         //println!("{:?}", wind);
         ret_v.push(wind[1] - wind[0]);
     }
-    return ret_v;
+    ret_v
 }
 #[allow(unused_variables)]
 pub fn part2(content: String) -> Result<(), Report> {
@@ -68,10 +65,7 @@ pub fn part2(content: String) -> Result<(), Report> {
     let mut history: Vec<isize> = vec![];
     for l in content.lines() {
         let mut grid: Vec<Vec<isize>> = vec![];
-        let mut data = l
-            .split(' ')
-            .map(|x| str_to_isize(x))
-            .collect::<Vec<isize>>();
+        let mut data = l.split(' ').map(str_to_isize).collect::<Vec<isize>>();
         data.reverse();
         grid.push(data);
         let mut brk = false;
@@ -81,7 +75,7 @@ pub fn part2(content: String) -> Result<(), Report> {
             }
             data = get_pred_vec(grid.last().unwrap());
             grid.push(data.clone());
-            brk = data.iter().find(|&&x| x != 0) == None;
+            brk = !data.iter().any(|&x| x != 0);
         }
         let glen = grid.len();
         for n in (0..grid.len()).rev() {
@@ -97,7 +91,7 @@ pub fn part2(content: String) -> Result<(), Report> {
             println!("{:?}", g);
         }
         history.push(*grid[0].last().unwrap());
-        sum = sum + grid[0].last().unwrap();
+        sum += grid[0].last().unwrap();
         println!("Temp {}", sum);
     }
 

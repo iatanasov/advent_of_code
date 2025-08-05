@@ -18,8 +18,8 @@ use aoc::year::Year;
 enum Action {
     Run {
         /// File input that contains the source puzzel data
-        #[arg(required = true)]
-        input: PathBuf,
+        #[arg(long)]
+        input: Option<String>,
         /// the part of the task
         #[arg(value_enum, long, default_value = "one")]
         part: Part,
@@ -60,8 +60,16 @@ fn main() -> Result<(), Report> {
     setup(&cli)?;
     match cli.subcommand {
         Action::Run { input, part } => {
-            let file = input;
-            let content = fs::read_to_string(file)?;
+            let content = if let Some(file) = input {
+                let path = PathBuf::from_str(&file)?;
+                if path.is_file() {
+                    fs::read_to_string(path)?
+                } else {
+                    file
+                }
+            } else {
+                String::from("")
+            };
             match cli.year {
                 Year::Y2022 => match cli.day {
                     1 => y2022::day1::execute(content, part),
@@ -118,6 +126,8 @@ fn main() -> Result<(), Report> {
                     7 => y2015::Day7 { content }.execute(part),
                     8 => y2015::Day8 { content }.execute(part),
                     9 => y2015::Day9 { content }.execute(part),
+                    10 => y2015::Day10 { content }.execute(part),
+                    11 => y2015::Day11 { content }.execute(part),
                     _ => Err(eyre!("Error not Implemented")),
                 },
                 Year::Y2016 => match cli.day {

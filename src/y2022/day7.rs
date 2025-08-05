@@ -68,10 +68,10 @@ impl FsNode {
         for child in &self.children {
             let c = child.borrow();
             if c.name == name {
-                return Some(Rc::clone(&child));
+                return Some(Rc::clone(child));
             }
         }
-        return None;
+        None
     }
     pub fn has_child(&self, name: String) -> bool {
         let mut has = false;
@@ -81,7 +81,7 @@ impl FsNode {
                 has = true;
             }
         }
-        return has;
+        has
     }
     pub fn recalc_size(&mut self) -> usize {
         if self.fs_type == FsType::Dir {
@@ -97,7 +97,7 @@ impl FsNode {
             );
         }
 
-        return self.size;
+        self.size
     }
 
     pub fn filter_by_size(&self, size: usize) -> Vec<usize> {
@@ -107,13 +107,11 @@ impl FsNode {
             sizes.push(self.size);
         }
         for child in &self.children {
-            if self.fs_type == FsType::Dir {
-                if child.borrow().fs_type == FsType::Dir {
-                    sizes.append(&mut child.borrow().filter_by_size(size));
-                }
+            if self.fs_type == FsType::Dir && child.borrow().fs_type == FsType::Dir {
+                sizes.append(&mut child.borrow().filter_by_size(size));
             }
         }
-        return sizes;
+        sizes
     }
 
     pub fn filter_by_size_ge(&self, size: usize) -> Vec<usize> {
@@ -123,18 +121,15 @@ impl FsNode {
             sizes.push(self.size);
         }
         for child in &self.children {
-            if self.fs_type == FsType::Dir {
-                if child.borrow().fs_type == FsType::Dir {
-                    sizes.append(&mut child.borrow().filter_by_size_ge(size));
-                }
+            if self.fs_type == FsType::Dir && child.borrow().fs_type == FsType::Dir {
+                sizes.append(&mut child.borrow().filter_by_size_ge(size));
             }
         }
-        return sizes;
+        sizes
     }
-    pub fn print_tree(&self, depth: usize) {
-        //println!(" {} {} {:?} {}", "---".repeat(depth), self.name, self.fs_type, self.size);
+    pub fn print_tree(&self) {
         for child in &self.children {
-            child.borrow().print_tree(depth + 1);
+            child.borrow().print_tree();
         }
     }
 }
@@ -172,15 +167,13 @@ pub fn build_tree(content: String) -> Rc<RefCell<FsNode>> {
             continue;
         } else if ls_re.is_match(l) {
             mode = CmdMode::Ls;
-        } else {
-            if mode == CmdMode::Ls {
-                if let Some(cap) = f_re.captures(l) {
-                    if "dir" != &cap[1] {
-                        cur_dir.borrow_mut().add_child(FsNode::new_file(
-                            String::from(&cap[2]),
-                            cap[1].parse::<usize>().unwrap(),
-                        ))
-                    }
+        } else if mode == CmdMode::Ls {
+            if let Some(cap) = f_re.captures(l) {
+                if "dir" != &cap[1] {
+                    cur_dir.borrow_mut().add_child(FsNode::new_file(
+                        String::from(&cap[2]),
+                        cap[1].parse::<usize>().unwrap(),
+                    ))
                 }
             }
         }
@@ -192,7 +185,7 @@ pub fn part1(content: String) -> Result<(), Report> {
     let root = build_tree(content);
     info!("Total Size: {}", root.borrow_mut().recalc_size());
     let sizes = root.borrow().filter_by_size(100000);
-    root.borrow().print_tree(0);
+    root.borrow().print_tree();
     info!("Size : {}", sizes.iter().sum::<usize>());
     Ok(())
 }

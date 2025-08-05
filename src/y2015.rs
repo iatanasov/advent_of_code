@@ -1,4 +1,7 @@
-use std::collections::{HashMap, HashSet};
+use std::{
+    char,
+    collections::{HashMap, HashSet},
+};
 
 use aoc::year::DayParts;
 use color_eyre::Report;
@@ -12,14 +15,14 @@ fn cl(acc: isize, c: char) -> isize {
 }
 impl DayParts for Day1 {
     #[allow(unused_variables)]
-    fn part1(&self) -> Result<(), Report> {
+    fn part1(&mut self) -> Result<(), Report> {
         for l in self.content.lines() {
             println!("{}", l.chars().fold(0, cl))
         }
         Ok(())
     }
     #[allow(unused_variables)]
-    fn part2(&self) -> Result<(), Report> {
+    fn part2(&mut self) -> Result<(), Report> {
         for l in self.content.lines() {
             println!(
                 "{:?}",
@@ -41,7 +44,7 @@ pub struct Day2 {
 }
 impl DayParts for Day2 {
     #[allow(unused_variables)]
-    fn part1(&self) -> Result<(), Report> {
+    fn part1(&mut self) -> Result<(), Report> {
         let sum: usize = self
             .content
             .lines()
@@ -55,7 +58,7 @@ impl DayParts for Day2 {
         Ok(())
     }
     #[allow(unused_variables)]
-    fn part2(&self) -> Result<(), Report> {
+    fn part2(&mut self) -> Result<(), Report> {
         let sum = 0;
         for l in self.content.lines() {
             let sides: Vec<usize> = l.split('x').map(|f| f.parse().unwrap()).collect();
@@ -90,7 +93,7 @@ impl House {
 }
 
 impl DayParts for Day3 {
-    fn part1(&self) -> Result<(), Report> {
+    fn part1(&mut self) -> Result<(), Report> {
         let mut grid: HashMap<House, usize> = HashMap::new();
         let mut h = House::new(0, 0);
         grid.insert(h.clone(), 1);
@@ -102,7 +105,7 @@ impl DayParts for Day3 {
         Ok(())
     }
 
-    fn part2(&self) -> Result<(), Report> {
+    fn part2(&mut self) -> Result<(), Report> {
         let mut grid: HashMap<House, usize> = HashMap::new();
         let mut santa = House::new(0, 0);
         let mut robo_santa = House::new(0, 0);
@@ -132,15 +135,14 @@ pub struct Day4 {
 }
 
 impl DayParts for Day4 {
-    fn part1(&self) -> Result<(), Report> {
+    fn part1(&mut self) -> Result<(), Report> {
         let secret = self.content.lines().next().unwrap();
         let mut i = 0;
         loop {
             let data = secret.to_owned() + i.to_string().as_str();
             let md5 = md5::compute(&data);
-            match md5.0 {
-                [0, 0, 4, ..] => break,
-                _ => (),
+            if let [0, 0, 4, ..] = md5.0 {
+                break;
             }
             i += 1;
         }
@@ -148,7 +150,7 @@ impl DayParts for Day4 {
         Ok(())
     }
 
-    fn part2(&self) -> Result<(), Report> {
+    fn part2(&mut self) -> Result<(), Report> {
         let secret = self.content.lines().next().unwrap();
         let mut i = 0;
         let l = "000000";
@@ -171,7 +173,7 @@ pub struct Day5 {
 }
 
 impl DayParts for Day5 {
-    fn part1(&self) -> Result<(), Report> {
+    fn part1(&mut self) -> Result<(), Report> {
         let mut sum = 0;
         for l in self.content.lines() {
             let mut vowels = 0;
@@ -205,7 +207,7 @@ impl DayParts for Day5 {
         Ok(())
     }
 
-    fn part2(&self) -> Result<(), Report> {
+    fn part2(&mut self) -> Result<(), Report> {
         let mut sum = 0;
         for l in self.content.lines() {
             let mut pair = false;
@@ -308,7 +310,7 @@ impl Inst {
 }
 impl DayParts for Day6 {
     #[allow(clippy::needless_range_loop)]
-    fn part1(&self) -> Result<(), Report> {
+    fn part1(&mut self) -> Result<(), Report> {
         let re =
             Regex::new(r"^(turn on|toggle|turn off)\s(\d+),(\d+)\sthrough\s(\d+),(\d+)").unwrap();
         let mut grid: [[usize; 1000]; 1000] = [[0; 1000]; 1000];
@@ -327,7 +329,7 @@ impl DayParts for Day6 {
         Ok(())
     }
 
-    fn part2(&self) -> Result<(), Report> {
+    fn part2(&mut self) -> Result<(), Report> {
         let re =
             Regex::new(r"^(turn on|toggle|turn off)\s(\d+),(\d+)\sthrough\s(\d+),(\d+)").unwrap();
         let mut grid: [[usize; 1000]; 1000] = [[0; 1000]; 1000];
@@ -352,7 +354,7 @@ pub struct Day7 {
 }
 
 impl DayParts for Day7 {
-    fn part1(&self) -> Result<(), Report> {
+    fn part1(&mut self) -> Result<(), Report> {
         let mut wires: HashMap<String, u16> = HashMap::new();
         let mut circuit: HashMap<String, String> = HashMap::new();
         for l in self.content.lines() {
@@ -368,7 +370,7 @@ impl DayParts for Day7 {
         Ok(())
     }
 
-    fn part2(&self) -> Result<(), Report> {
+    fn part2(&mut self) -> Result<(), Report> {
         let mut wires: HashMap<String, u16> = HashMap::new();
         let mut circuit: HashMap<String, String> = HashMap::new();
         for l in self.content.lines() {
@@ -461,7 +463,7 @@ pub struct Day8 {
     pub content: String,
 }
 impl DayParts for Day8 {
-    fn part1(&self) -> Result<(), Report> {
+    fn part1(&mut self) -> Result<(), Report> {
         let mut total = 0;
         for l in self.content.lines() {
             total += l.chars().count();
@@ -487,7 +489,7 @@ impl DayParts for Day8 {
         Ok(())
     }
 
-    fn part2(&self) -> Result<(), Report> {
+    fn part2(&mut self) -> Result<(), Report> {
         let mut total = 0;
         let mut new_total = 0;
         for l in self.content.lines() {
@@ -585,7 +587,7 @@ fn find_route(cities: &[String], distances: &Vec<Distance>) -> usize {
     dist
 }
 impl DayParts for Day9 {
-    fn part1(&self) -> Result<(), Report> {
+    fn part1(&mut self) -> Result<(), Report> {
         let distances: Vec<Distance> = self.content.lines().map(Distance::from_line).collect();
         let mut cities: HashSet<String> = HashSet::new();
         distances.iter().for_each(|f| {
@@ -606,7 +608,7 @@ impl DayParts for Day9 {
         Ok(())
     }
 
-    fn part2(&self) -> Result<(), Report> {
+    fn part2(&mut self) -> Result<(), Report> {
         let distances: Vec<Distance> = self.content.lines().map(Distance::from_line).collect();
         let mut cities: HashSet<String> = HashSet::new();
         distances.iter().for_each(|f| {
@@ -625,6 +627,171 @@ impl DayParts for Day9 {
             }
         }
         println!("{max}");
+        Ok(())
+    }
+}
+
+pub struct Day10 {
+    pub content: String,
+}
+
+pub fn look_and_say(input: Vec<char>) -> Vec<char> {
+    let mut res: Vec<char> = Vec::new();
+    if !input.is_empty() {
+        let mut curr = '0';
+        let mut count = 0;
+        for c in input.into_iter() {
+            if c == curr {
+                count += 1;
+            } else {
+                if curr != '0' {
+                    res.push(format!("{}", count).chars().next().unwrap());
+                    res.push(curr);
+                }
+                curr = c;
+                count = 1;
+            }
+        }
+        if count > 0 {
+            res.push(format!("{}", count).chars().next().unwrap());
+            res.push(curr);
+        }
+    }
+    res
+}
+impl DayParts for Day10 {
+    fn part1(&mut self) -> Result<(), Report> {
+        self.content = String::from("1113222113");
+        let mut content = self.content.to_string().chars().collect();
+        for _ in 0..40 {
+            content = look_and_say(content);
+        }
+        println!("{}", content.iter().collect::<String>().len());
+        Ok(())
+    }
+
+    fn part2(&mut self) -> Result<(), Report> {
+        self.content = String::from("1113222113");
+        let mut content = self.content.to_string().chars().collect();
+        for _ in 0..50 {
+            content = look_and_say(content);
+        }
+        println!("{}", content.iter().collect::<String>().len());
+        Ok(())
+    }
+}
+
+pub struct Day11 {
+    pub content: String,
+}
+impl Day11 {
+    fn inc(c: u8) -> (u8, bool) {
+        let next = c + 1;
+        if next > b'z' {
+            return (b'a', true);
+        }
+        (next, false)
+    }
+    fn is_match(b: &[u8]) -> bool {
+        let mut p1: (bool, u8, isize) = (false, 0, -1);
+        let mut p2: (bool, u8, isize) = (false, 0, -1);
+        let mut i = 0;
+        let triple = Day11::is_triple(b);
+        if !triple {
+            return false;
+        }
+        loop {
+            if i + 1 < b.len() && b[i] == b[i + 1] {
+                if !p1.0 {
+                    p1 = (true, b[i], i as isize);
+                    i += 1;
+                }
+                if !p2.0 && p1.1 != b[i] {
+                    p2 = (true, b[i], i as isize);
+                    i += 1;
+                }
+            }
+            i += 1;
+            if i >= b.len() {
+                break;
+            }
+        }
+        triple && p1.0 && p2.0
+    }
+    fn is_triple(b: &[u8]) -> bool {
+        let mut i = 0;
+        loop {
+            if b[i] == b'i' || b[i] == b'o' || b[i] == b'l' {
+                return false;
+            }
+            if i + 2 < b.len() && (b[i] == b[i + 1] - 1 && b[i] == b[i + 2] - 2) {
+                return true;
+            }
+            i += 1;
+            if i >= b.len() {
+                break;
+            }
+        }
+        false
+    }
+
+    fn inc_string(mut b: Vec<u8>) -> Vec<u8> {
+        let mut leftover = true;
+        let len = b.len();
+        let mut count = len - 1;
+
+        while leftover {
+            if let Some(i) = b.get_mut(count) {
+                (*i, leftover) = Day11::inc(*i);
+            }
+            if leftover {
+                if count == 0 {
+                    count = len - 1;
+                } else {
+                    count -= 1;
+                }
+            } else {
+                count = len - 1;
+            }
+        }
+        b
+    }
+}
+impl DayParts for Day11 {
+    fn part1(&mut self) -> Result<(), Report> {
+        let mut content = self.content.as_bytes().to_vec();
+        let len = content.len();
+        let mut count = len - 1;
+        let mut leftover = true;
+        println!("{}", String::from_utf8_lossy(&content));
+        while leftover {
+            if Day11::is_triple(&content) && Day11::is_match(&content) {
+                break;
+            }
+            if let Some(i) = content.get_mut(count) {
+                (*i, leftover) = Day11::inc(*i);
+            }
+            if leftover {
+                if count == 0 {
+                    count = len - 1;
+                } else {
+                    count -= 1;
+                }
+            } else {
+                count = len - 1;
+            }
+            leftover = true;
+        }
+        println!("{}", String::from_utf8_lossy(&content));
+        self.content = String::from_utf8_lossy(&content).to_string();
+        Ok(())
+    }
+
+    fn part2(&mut self) -> Result<(), Report> {
+        self.content =
+            String::from_utf8_lossy(&Day11::inc_string(self.content.as_bytes().to_vec()))
+                .to_string();
+        self.part1()?;
         Ok(())
     }
 }

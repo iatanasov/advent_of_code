@@ -154,11 +154,11 @@ enum HandType {
 }
 
 impl HandType {
-    fn from(cards: &Vec<Card>) -> HandType {
+    fn from(cards: &[Card]) -> HandType {
         let mut hand_map: HashMap<Card, usize> = HashMap::new();
         for c in cards.iter() {
             if let Some(count) = hand_map.get_mut(c) {
-                *count = *count + 1;
+                *count += 1;
             } else {
                 hand_map.insert(*c, 1);
             }
@@ -171,7 +171,7 @@ impl HandType {
             }
             return HandType::FullHouse;
         } else if hand_map.len() == 3 {
-            if hand_map.into_iter().find(|(k, v)| *v == 3) == None {
+            if hand_map.into_iter().find(|(k, v)| *v == 3).is_none() {
                 return HandType::TwoPair;
             }
             return HandType::ThreeOfKind;
@@ -186,7 +186,7 @@ impl HandType {
         let jokers = cards.iter().filter(|c| **c == Card2::J).count();
         for c in cards.iter() {
             if let Some(count) = hand_map.get_mut(c) {
-                *count = *count + 1;
+                *count += 1;
             } else {
                 hand_map.insert(*c, 1);
             }
@@ -200,14 +200,12 @@ impl HandType {
                 } else {
                     htype = HandType::FourOfKind;
                 }
+            } else if jokers == 1 {
+                htype = HandType::FourOfKind;
+            } else if jokers > 1 {
+                htype = HandType::FiveOfKind;
             } else {
-                if jokers == 1 {
-                    htype = HandType::FourOfKind;
-                } else if jokers > 1 {
-                    htype = HandType::FiveOfKind;
-                } else {
-                    htype = HandType::FullHouse;
-                }
+                htype = HandType::FullHouse;
             }
         } else if hand_map.len() == 3 {
             if hand_map.into_iter().find(|(k, v)| *v == 3) == None {
@@ -218,14 +216,12 @@ impl HandType {
                 } else {
                     htype = HandType::TwoPair;
                 }
+            } else if jokers == 1 || jokers == 3 {
+                htype = HandType::FourOfKind;
+            } else if jokers == 2 {
+                htype = HandType::FiveOfKind;
             } else {
-                if jokers == 1 || jokers == 3 {
-                    htype = HandType::FourOfKind;
-                } else if jokers == 2 {
-                    htype = HandType::FiveOfKind;
-                } else {
-                    htype = HandType::ThreeOfKind;
-                }
+                htype = HandType::ThreeOfKind;
             }
         } else if hand_map.len() == 4 {
             if jokers == 2 || jokers == 1 {
@@ -233,13 +229,11 @@ impl HandType {
             } else {
                 htype = HandType::OncePair;
             }
-        } else {
-            if jokers > 0 {
-                htype = HandType::OncePair;
-            }
+        } else if jokers > 0 {
+            htype = HandType::OncePair;
         }
 
-        return htype;
+        htype
     }
 }
 
