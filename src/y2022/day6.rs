@@ -32,7 +32,7 @@ pub fn part1(content: String) -> Result<(), Report> {
                     }
                 }
             }
-            if uniq == true {
+            if uniq {
                 info!("Start point {} ", count);
                 break;
             }
@@ -61,7 +61,7 @@ pub fn part2(content: String) -> Result<(), Report> {
                     }
                 }
             }
-            if uniq == true {
+            if uniq {
                 info!("Start point {} ", count);
                 break;
             }

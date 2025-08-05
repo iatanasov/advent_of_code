@@ -17,7 +17,7 @@ pub struct CrtStack {
 
 impl CrtStack {
     fn new() -> Self {
-        return CrtStack { stack: Vec::new() };
+        CrtStack { stack: Vec::new() }
     }
 
     fn append(&mut self, crts: &mut Vec<char>) {
@@ -59,11 +59,11 @@ pub fn part1(content: String) -> Result<(), Report> {
     let mut manifest = true;
     let mut stack: HashMap<usize, CrtStack> = HashMap::new();
     for l in content.lines() {
-        if l.len() == 0 {
+        if l.is_empty() {
             manifest = false;
             continue;
         }
-        if manifest == true {
+        if manifest {
             let line = l
                 .replace("    ", "[-] ")
                 .replace("[", " ")
@@ -104,11 +104,11 @@ pub fn part2(content: String) -> Result<(), Report> {
     let mut manifest = true;
     let mut stack: HashMap<usize, CrtStack> = HashMap::new();
     for l in content.lines() {
-        if l.len() == 0 {
+        if l.is_empty() {
             manifest = false;
             continue;
         }
-        if manifest == true {
+        if manifest {
             let line = l
                 .replace("    ", "[-] ")
                 .replace("[", " ")

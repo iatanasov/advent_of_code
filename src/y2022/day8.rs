@@ -21,7 +21,7 @@ fn is_visible(top: i32, left: i32, mid: i32, right: i32, bottom: i32) -> bool {
         "{} {} [{}] {} {} res: {}",
         top, left, mid, right, bottom, visible
     );
-    return visible;
+    visible
 }
 
 #[allow(unused_variables)]
@@ -31,7 +31,6 @@ pub fn part1(content: String) -> Result<(), Report> {
     for l in content.lines() {
         lines.push(
             l.chars()
-                .into_iter()
                 .map(|c| c.to_digit(10).unwrap() as i32)
                 .collect(),
         );
@@ -85,7 +84,6 @@ pub fn part2(content: String) -> Result<(), Report> {
     for l in content.lines() {
         lines.push(
             l.chars()
-                .into_iter()
                 .map(|c| c.to_digit(10).unwrap() as i32)
                 .collect(),
         );

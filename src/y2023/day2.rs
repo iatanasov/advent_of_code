@@ -29,11 +29,11 @@ pub fn part1(content: String) -> Result<(), Report> {
                 let v = t.trim_start().split(' ').collect::<Vec<&str>>();
                 let n = v[0].parse::<usize>().unwrap();
                 let k = v[1];
-                return n > *limits.get(k).unwrap();
+                n > *limits.get(k).unwrap()
             })
             .collect();
-        if r.len() == 0 {
-            sum = sum + game_n;
+        if r.is_empty() {
+            sum += game_n;
         }
         info!("{:?}", r);
     }
@@ -75,7 +75,7 @@ impl GameSet {
         }
     }
     fn power(&self) -> usize {
-        return self.red * self.green * self.blue;
+        self.red * self.green * self.blue
     }
 }
 
@@ -92,7 +92,7 @@ pub fn part2(content: String) -> Result<(), Report> {
             let n = v[0].parse::<usize>().unwrap();
             game_set.set_max(v[1], n);
         }
-        sum = sum + game_set.power();
+        sum += game_set.power();
     }
     println!("{}", sum);
     Ok(())

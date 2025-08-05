@@ -24,8 +24,7 @@ pub fn part1(content: String) -> Result<(), Report> {
             .into_iter()
             .map(|c| c.to_string())
             .collect();
-        sum = sum
-            + format!("{}{}", digits.first().unwrap(), digits.last().unwrap())
+        sum += format!("{}{}", digits.first().unwrap(), digits.last().unwrap())
                 .parse::<u32>()
                 .unwrap();
     }
@@ -45,7 +44,7 @@ pub fn part2(content: String) -> Result<(), Report> {
         ("eight", 8),
         ("nine", 9),
     ]);
-    let mut sum = 0 as usize;
+    let mut sum = 0_usize;
     for l in content.lines() {
         let mut numbers: HashMap<usize, usize> = HashMap::new();
         for k in dmap.keys() {
@@ -69,7 +68,7 @@ pub fn part2(content: String) -> Result<(), Report> {
         .parse::<usize>()
         .unwrap();
 
-        sum = sum + dd;
+        sum += dd;
     }
     println!("{}", sum);
     Ok(())

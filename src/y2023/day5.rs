@@ -64,8 +64,8 @@ pub fn part1(content: String) -> Result<(), Report> {
                     seed.push(seed[level]);
                 }
             }
-            level = level + 1;
-            if res == None {
+            level += 1;
+            if res.is_none() {
                 break;
             }
         } else if l.contains("map") {
@@ -89,14 +89,14 @@ fn src_to_dest(dest: usize, src: usize, range: usize, val: usize) -> Option<usiz
     if val >= src && val <= src + range {
         return Some((val - src) + dest);
     }
-    return None;
+    None
 }
 fn dest_to_src(dest: usize, src: usize, offset: usize, val: usize) -> Option<usize> {
     //println!("Compare val {} >= src {} && val {} <={}", val, src ,val, src+offset);
     if val >= dest && val < dest + offset {
         return Some(val - dest + src);
     }
-    return None;
+    None
 }
 fn exclusive_found_in_range(
     sorted_ranges: &Vec<(usize, usize, usize)>,
@@ -107,11 +107,11 @@ fn exclusive_found_in_range(
             return (val, i);
         }
         let res = dest_to_src(r.0, r.1, r.2, val);
-        if res != None {
+        if res.is_some() {
             return (res.unwrap(), i);
         }
     }
-    return (val, 0);
+    (val, 0)
 }
 
 #[allow(unused_variables)]
@@ -135,7 +135,7 @@ pub fn part2(content: String) -> Result<(), Report> {
             range.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap());
             ranges.insert(0, range);
             range = Vec::new();
-            if res == None {
+            if res.is_none() {
                 break;
             }
         } else if l.contains("map") {
@@ -188,7 +188,7 @@ pub fn part2(content: String) -> Result<(), Report> {
         if found {
             break;
         }
-        n = n + 1;
+        n += 1;
     }
     println!("{}", n);
     Ok(())

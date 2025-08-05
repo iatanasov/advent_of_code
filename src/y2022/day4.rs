@@ -29,7 +29,7 @@ impl Range {
         {
             return true;
         }
-        return false;
+        false
     }
     fn no_overlap(&self, other: Range) -> bool {
         if ((self.low < other.low) && (self.low < other.high))
@@ -48,7 +48,7 @@ impl Range {
             return true;
         }
 
-        return false;
+        false
     }
 }
 

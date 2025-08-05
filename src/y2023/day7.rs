@@ -166,12 +166,12 @@ impl HandType {
         if hand_map.len() == 1 {
             return HandType::FiveOfKind;
         } else if hand_map.len() == 2 {
-            if hand_map.into_iter().find(|(k, v)| *v == 3) == None {
+            if !hand_map.into_iter().any(|(k, v)| v == 3) {
                 return HandType::FourOfKind;
             }
             return HandType::FullHouse;
         } else if hand_map.len() == 3 {
-            if hand_map.into_iter().find(|(k, v)| *v == 3).is_none() {
+            if !hand_map.into_iter().any(|(k, v)| v == 3) {
                 return HandType::TwoPair;
             }
             return HandType::ThreeOfKind;
@@ -180,7 +180,7 @@ impl HandType {
         }
         HandType::HighCard
     }
-    fn from_2(cards: &Vec<Card2>) -> HandType {
+    fn from_2(cards: &[Card2]) -> HandType {
         let mut hand_map: HashMap<Card2, usize> = HashMap::new();
         let mut htype = HandType::HighCard;
         let jokers = cards.iter().filter(|c| **c == Card2::J).count();
@@ -194,7 +194,7 @@ impl HandType {
         if hand_map.len() == 1 {
             htype = HandType::FiveOfKind;
         } else if hand_map.len() == 2 {
-            if hand_map.into_iter().find(|(k, v)| *v == 3) == None {
+            if !hand_map.into_iter().any(|(k, v)| v == 3) {
                 if jokers > 0 {
                     htype = HandType::FiveOfKind;
                 } else {
@@ -208,7 +208,7 @@ impl HandType {
                 htype = HandType::FullHouse;
             }
         } else if hand_map.len() == 3 {
-            if hand_map.into_iter().find(|(k, v)| *v == 3) == None {
+            if !hand_map.into_iter().any(|(k, v)| v == 3) {
                 if jokers == 1 {
                     htype = HandType::FullHouse;
                 } else if jokers == 2 {
@@ -278,18 +278,18 @@ impl Ord for Hand {
                 }
             }
         }
-        return ord;
+        ord
     }
 }
 
 impl PartialEq for Hand {
     fn eq(&self, other: &Self) -> bool {
-        return self.cmp(other) == Ordering::Equal;
+        self.cmp(other) == Ordering::Equal
     }
 }
 impl PartialOrd for Hand {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        return Some(self.cmp(&other));
+        Some(self.cmp(other))
     }
 }
 
@@ -303,7 +303,7 @@ pub fn part1(content: String) -> Result<(), Report> {
     let mut total = 0;
     for (i, g) in game.into_iter().enumerate() {
         //info!("{:?} {} {} ", g, g.bid , i+1);
-        total = total + (g.bid * (i + 1));
+        total += g.bid * (i + 1);
     }
     println!("{}", total);
     Ok(())
@@ -351,18 +351,18 @@ impl Ord for Hand2 {
                 }
             }
         }
-        return ord;
+        ord
     }
 }
 
 impl PartialEq for Hand2 {
     fn eq(&self, other: &Self) -> bool {
-        return self.cmp(other) == Ordering::Equal;
+        self.cmp(other) == Ordering::Equal
     }
 }
 impl PartialOrd for Hand2 {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        return Some(self.cmp(&other));
+        Some(self.cmp(other))
     }
 }
 
@@ -376,7 +376,7 @@ pub fn part2(content: String) -> Result<(), Report> {
     let mut total = 0;
     for (i, g) in game.into_iter().enumerate() {
         info!("{:?} {} {} ", g, g.bid, i + 1);
-        total = total + (g.bid * (i + 1));
+        total += g.bid * (i + 1);
     }
     println!("{}", total);
     Ok(())

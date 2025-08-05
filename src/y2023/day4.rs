@@ -30,15 +30,13 @@ pub fn part1(content: String) -> Result<(), Report> {
         let winning = &cap[2]
             .trim_start()
             .split(' ')
-            .into_iter()
-            .filter(|&x| x.len() > 0)
+            .filter(|&x| !x.is_empty())
             .map(|x| x.parse::<usize>().unwrap())
             .collect::<Vec<usize>>();
         let card = &cap[3]
             .trim_start()
             .split(' ')
-            .into_iter()
-            .filter(|&x| x.len() > 0)
+            .filter(|&x| !x.is_empty())
             .map(|x| x.parse::<usize>().unwrap())
             .collect::<Vec<usize>>();
         let mut m_c = 0;
@@ -50,7 +48,7 @@ pub fn part1(content: String) -> Result<(), Report> {
             }
         }
         if m_c > 0 {
-            sum = sum + i32::pow(2, m_c - 1);
+            sum += i32::pow(2, m_c - 1);
         }
     }
     println!("sum {}", sum);
@@ -66,7 +64,7 @@ struct Card {
 
 impl Card {
     pub fn inc(&mut self, x: &usize) {
-        self.copies = self.copies + 1 * x;
+        self.copies += *x;
     }
     pub fn copies(&self) -> usize {
         self.copies
@@ -81,15 +79,13 @@ pub fn part2(content: String) -> Result<(), Report> {
         let win = &cap[2]
             .trim_start()
             .split(' ')
-            .into_iter()
-            .filter(|&x| x.len() > 0)
+            .filter(|&x| !x.is_empty())
             .map(|x| x.parse::<usize>().unwrap())
             .collect::<Vec<usize>>();
         let nums = &cap[3]
             .trim_start()
             .split(' ')
-            .into_iter()
-            .filter(|&x| x.len() > 0)
+            .filter(|&x| !x.is_empty())
             .map(|x| x.parse::<usize>().unwrap())
             .collect::<Vec<usize>>();
         let mut m_c = 0;

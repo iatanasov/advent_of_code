@@ -53,7 +53,7 @@ pub fn part1(content: String) -> Result<(), Report> {
             } else {
                 start = node.1;
             }
-            steps = steps + 1;
+            steps += 1;
             if start == end {
                 break;
             }
@@ -101,14 +101,14 @@ pub fn part2(content: String) -> Result<(), Report> {
                     *s = node.1;
                 }
                 if s.ends_with("Z") {
-                    has_z = has_z + 1;
+                    has_z += 1;
                     if cycle[i] == 0 {
                         cycle[i] = counter;
                     }
                 }
             }
-            counter = counter + 1;
-            steps = steps + 1;
+            counter += 1;
+            steps += 1;
             if has_z >= 1 {
                 let total = &cycle.iter().filter(|x| **x == 0).count();
                 if *total == 0 {
@@ -130,7 +130,7 @@ fn lcm(nums: &mut Vec<usize>) -> usize {
     let a = nums.remove(0);
     let b = lcm(nums);
 
-    return a * b / gcd_two(a, b);
+    a * b / gcd_two(a, b)
 }
 
 fn gcd(nums: &mut Vec<usize>) -> usize {

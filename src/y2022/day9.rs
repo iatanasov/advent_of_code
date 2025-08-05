@@ -34,30 +34,30 @@ struct Point {
 
 impl Point {
     pub fn new(x: isize, y: isize) -> Self {
-        return Point { x, y };
+        Point { x, y }
     }
 
     pub fn head_move(&mut self, motion: &Motion, step: usize) {
         match motion {
-            Motion::R => self.x = self.x + 1,
-            Motion::L => self.x = self.x - 1,
-            Motion::U => self.y = self.y + 1,
-            Motion::D => self.y = self.y - 1,
+            Motion::R => self.x += 1,
+            Motion::L => self.x -= 1,
+            Motion::U => self.y += 1,
+            Motion::D => self.y -= 1,
         }
     }
     pub fn tail_move(&mut self, head: &Point) {
         if self.y == head.y {
             let d = head.x - self.x;
             match d {
-                2 => self.x = self.x + 1,
-                -2 => self.x = self.x - 1,
+                2 => self.x += 1,
+                -2 => self.x -= 1,
                 _ => (),
             }
         } else if self.x == head.x {
             let d = head.y - self.y;
             match d {
-                2 => self.y = self.y + 1,
-                -2 => self.y = self.y - 1,
+                2 => self.y += 1,
+                -2 => self.y -= 1,
                 _ => (),
             }
         }
@@ -66,7 +66,7 @@ impl Point {
 
 impl PartialEq for Point {
     fn eq(&self, other: &Self) -> bool {
-        return self.x == other.x && self.y == other.y;
+        self.x == other.x && self.y == other.y
     }
 }
 
@@ -81,7 +81,7 @@ impl Move {
             _ => panic!("Bad pair"),
         };
         let steps = pair[1].parse::<usize>().unwrap();
-        return Move { motion, steps };
+        Move { motion, steps }
     }
 }
 

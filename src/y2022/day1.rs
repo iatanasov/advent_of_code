@@ -13,7 +13,7 @@ pub fn part1(content: String) -> Result<(), Report> {
     let mut max_cal = 0;
     let mut current_cal = 0;
     for l in content.lines() {
-        if l == "" {
+        if l.is_empty() {
             if current_cal > max_cal {
                 max_cal = current_cal
             }
@@ -31,12 +31,10 @@ pub fn part2(content: String) -> Result<(), Report> {
     let mut top: Vec<usize> = vec![0, 0, 0];
     let mut current_cal = 0;
     for l in content.lines() {
-        if l == "" {
+        if l.is_empty() {
             for m in &mut top {
                 if current_cal > *m {
-                    let current = *m;
-                    *m = current_cal;
-                    current_cal = current;
+                    std::mem::swap(&mut (*m), &mut current_cal);
                 }
             }
             current_cal = 0;

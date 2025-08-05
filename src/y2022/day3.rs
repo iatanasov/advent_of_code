@@ -17,7 +17,7 @@ fn gen_priotiry() -> HashMap<char, usize> {
         pmap.insert(p, i + 1);
     }
 
-    return pmap;
+    pmap
 }
 
 pub fn part2(content: String) -> Result<(), Report> {
@@ -47,9 +47,9 @@ pub fn part2(content: String) -> Result<(), Report> {
                         "Found {} n {} priority {}",
                         &ch,
                         &n,
-                        priority.get(&ch).unwrap()
+                        priority.get(ch).unwrap()
                     );
-                    sum += priority.get(&ch).unwrap();
+                    sum += priority.get(ch).unwrap();
                     break;
                 }
             }

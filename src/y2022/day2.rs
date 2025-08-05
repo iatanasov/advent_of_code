@@ -22,10 +22,10 @@ pub fn part1(content: String) -> Result<(), Report> {
 }
 
 fn round(p1: &str, p2: &str) -> usize {
-    return match p2 {
+    match p2 {
         "X" => match p1 {
             "A" => 1 + 3,
-            "B" => 1 + 0,
+            "B" => 1,
             "C" => 1 + 6,
             _ => 0,
         },
@@ -46,13 +46,13 @@ fn round(p1: &str, p2: &str) -> usize {
             }
         }
         _ => 0,
-    };
+    }
 }
 
 fn round2(p1: &str, p2: &str) -> usize {
-    return match p2 {
+    match p2 {
         "X" => {
-            0 + match p1 {
+            match p1 {
                 "A" => 3,
                 "B" => 1,
                 "C" => 2,
@@ -76,7 +76,7 @@ fn round2(p1: &str, p2: &str) -> usize {
             }
         }
         _ => 0,
-    };
+    }
 }
 
 pub fn part2(content: String) -> Result<(), Report> {

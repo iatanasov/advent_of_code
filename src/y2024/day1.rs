@@ -28,7 +28,7 @@ pub fn part1(content: String) -> Result<(), Report> {
         println!("{i}");
         let b = list2[i];
         println!("a {} b {}", a, b);
-        total = total + a.abs_diff(b);
+        total += a.abs_diff(b);
     }
     println!("total {total}");
     Ok(())
