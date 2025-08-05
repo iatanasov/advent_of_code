@@ -108,12 +108,12 @@ pub fn part2(content: String) -> Result<(), Report> {
         let r = cards[k].copies();
         let l = cards[k].winning;
         let j = k + 1;
-        for i in j..j + l {
+        (j..j + l).for_each(|i| {
             if i < cards_len {
                 let cn = &mut cards[i];
                 cn.inc(&r);
             }
-        }
+        });
     }
     let sum: usize = cards
         .into_iter()

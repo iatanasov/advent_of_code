@@ -40,7 +40,6 @@ pub fn part1(content: String) -> Result<(), Report> {
         count += 1;
         if next.is_none() || next.unwrap().d == 'S' {
             info!("Exit because {:?}", next);
-            info!("{} {}", count, count / 2 + count % 1);
             break;
         }
 
@@ -50,7 +49,7 @@ pub fn part1(content: String) -> Result<(), Report> {
     }
     Ok(())
 }
-fn find_s_index(layout: &Vec<Vec<char>>) -> Tile {
+fn find_s_index(layout: &[Vec<char>]) -> Tile {
     for (i, c) in layout.iter().enumerate() {
         for (j, d) in c.iter().enumerate() {
             if d == &'S' {
@@ -61,12 +60,8 @@ fn find_s_index(layout: &Vec<Vec<char>>) -> Tile {
     panic!("Fail to find S");
 }
 
-fn get_tile(y: isize, x: isize, prev: Tile, layout: &Vec<Vec<char>>) -> Option<Tile> {
-    match x >= 0
-        && y >= 0
-        && y < layout.len() as isize
-        && x < layout[y as usize].len() as isize
-    {
+fn get_tile(y: isize, x: isize, prev: Tile, layout: &[Vec<char>]) -> Option<Tile> {
+    match x >= 0 && y >= 0 && y < layout.len() as isize && x < layout[y as usize].len() as isize {
         true => {
             let mut t = Some(Tile::new(
                 y as usize,
@@ -81,7 +76,7 @@ fn get_tile(y: isize, x: isize, prev: Tile, layout: &Vec<Vec<char>>) -> Option<T
         false => None,
     }
 }
-fn find_next(start: Tile, prev: Tile, layout: &Vec<Vec<char>>) -> Option<Tile> {
+fn find_next(start: Tile, prev: Tile, layout: &[Vec<char>]) -> Option<Tile> {
     let n = get_tile(start.y as isize - 1, start.x as isize, prev, layout);
     let e = get_tile(start.y as isize, start.x as isize + 1, prev, layout);
     let w = get_tile(start.y as isize, start.x as isize - 1, prev, layout);
@@ -131,7 +126,10 @@ fn find_next(start: Tile, prev: Tile, layout: &Vec<Vec<char>>) -> Option<Tile> {
         'L' => {
             if n.is_some() && n.unwrap().d != '.' && n.unwrap().d != 'L' && n.unwrap().d != 'J' {
                 n
-            } else if e.is_some() && e.unwrap().d != '.' && e.unwrap().d != 'L' && e.unwrap().d != 'F'
+            } else if e.is_some()
+                && e.unwrap().d != '.'
+                && e.unwrap().d != 'L'
+                && e.unwrap().d != 'F'
             {
                 e
             } else {
@@ -141,7 +139,10 @@ fn find_next(start: Tile, prev: Tile, layout: &Vec<Vec<char>>) -> Option<Tile> {
         'J' => {
             if n.is_some() && n.unwrap().d != '.' && n.unwrap().d != 'L' && n.unwrap().d != 'J' {
                 n
-            } else if w.is_some() && w.unwrap().d != '.' && w.unwrap().d != 'J' && w.unwrap().d != '7'
+            } else if w.is_some()
+                && w.unwrap().d != '.'
+                && w.unwrap().d != 'J'
+                && w.unwrap().d != '7'
             {
                 w
             } else {
@@ -170,7 +171,10 @@ fn find_next(start: Tile, prev: Tile, layout: &Vec<Vec<char>>) -> Option<Tile> {
                 && s.unwrap().d != '7'
             {
                 s
-            } else if e.is_some() && e.unwrap().d != '.' && e.unwrap().d != '|' && e.unwrap().d != 'L'
+            } else if e.is_some()
+                && e.unwrap().d != '.'
+                && e.unwrap().d != '|'
+                && e.unwrap().d != 'L'
             {
                 e
             } else {

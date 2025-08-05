@@ -29,11 +29,7 @@ pub fn part1(content: String) -> Result<(), Report> {
     let mut count: usize = 0;
     let mut lines: Vec<Vec<i32>> = vec![];
     for l in content.lines() {
-        lines.push(
-            l.chars()
-                .map(|c| c.to_digit(10).unwrap() as i32)
-                .collect(),
-        );
+        lines.push(l.chars().map(|c| c.to_digit(10).unwrap() as i32).collect());
     }
     debug!("{:?}", lines);
     let line_len = lines[0].len();
@@ -48,19 +44,19 @@ pub fn part1(content: String) -> Result<(), Report> {
             let top = max_top_line[j];
             let mut right = -1;
             if j < line_len - 1 {
-                for k in j + 1..line_len {
+                (j + 1..line_len).for_each(|k| {
                     if current_line[k] >= right {
                         right = current_line[k];
                     }
-                }
+                });
             }
             let mut bottom = -1;
             if i < lines.len() - 1 {
-                for k in i + 1..lines.len() {
+                (i + 1..lines.len()).for_each(|k| {
                     if lines[k][j] >= bottom {
                         bottom = lines[k][j];
                     }
-                }
+                });
             }
             if is_visible(top, left, mid, right, bottom) {
                 count += 1;
@@ -82,11 +78,7 @@ pub fn part2(content: String) -> Result<(), Report> {
     let mut index = (0, 0);
     let mut lines: Vec<Vec<i32>> = vec![];
     for l in content.lines() {
-        lines.push(
-            l.chars()
-                .map(|c| c.to_digit(10).unwrap() as i32)
-                .collect(),
-        );
+        lines.push(l.chars().map(|c| c.to_digit(10).unwrap() as i32).collect());
     }
     debug!("{:?}", lines);
     let line_len = lines[0].len();
@@ -97,7 +89,8 @@ pub fn part2(content: String) -> Result<(), Report> {
         for j in 0..line_len {
             let mid = current_line[j];
             let mut right_score = 0;
-            for k in j + 1..line_len {
+            //for k in j + 1..line_len
+            for (k, v) in lines.iter().enumerate().take(max_lines).skip(i + 1) {
                 if current_line[k] >= mid {
                     right_score = k - j;
                     break;
@@ -114,7 +107,7 @@ pub fn part2(content: String) -> Result<(), Report> {
                 }
             }
             let mut bottom_score = 0;
-            for k in i + 1..max_lines {
+            for (k, v) in lines.iter().enumerate().take(max_lines).skip(i + 1) {
                 if lines[k][j] >= mid {
                     bottom_score = k - i;
                     break;

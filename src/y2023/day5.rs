@@ -98,16 +98,13 @@ fn dest_to_src(dest: usize, src: usize, offset: usize, val: usize) -> Option<usi
     }
     None
 }
-fn exclusive_found_in_range(
-    sorted_ranges: &Vec<(usize, usize, usize)>,
-    val: usize,
-) -> (usize, usize) {
+fn exclusive_found_in_range(sorted_ranges: &[(usize, usize, usize)], val: usize) -> (usize, usize) {
     for (i, r) in sorted_ranges.iter().enumerate() {
         if val < r.0 {
             return (val, i);
         }
         let res = dest_to_src(r.0, r.1, r.2, val);
-        if res.is_some() {
+        if let Some(res1) = res {
             return (res.unwrap(), i);
         }
     }
@@ -169,22 +166,21 @@ pub fn part2(content: String) -> Result<(), Report> {
     let mut found = false;
     loop {
         val = n;
-        for r in 0..8 {
-            if r == 7 {
-                for range in &ranges[r] {
-                    if val >= range.0 && val <= range.0 + range.2 {
-                        found = true;
-                        break;
+        (0..8).for_each(|r| {
+            if !found {
+                if r == 7 {
+                    for range in &ranges[r] {
+                        if val >= range.0 && val <= range.0 + range.2 {
+                            found = true;
+                            break;
+                        }
                     }
+                } else {
+                    let res = exclusive_found_in_range(&ranges[r], val);
+                    val = res.0;
                 }
-                if found {
-                    break;
-                }
-            } else {
-                let res = exclusive_found_in_range(&ranges[r], val);
-                val = res.0;
             }
-        }
+        });
         if found {
             break;
         }

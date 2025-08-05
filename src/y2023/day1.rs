@@ -25,8 +25,8 @@ pub fn part1(content: String) -> Result<(), Report> {
             .map(|c| c.to_string())
             .collect();
         sum += format!("{}{}", digits.first().unwrap(), digits.last().unwrap())
-                .parse::<u32>()
-                .unwrap();
+            .parse::<u32>()
+            .unwrap();
     }
     println!("{}", sum);
     Ok(())
@@ -48,8 +48,8 @@ pub fn part2(content: String) -> Result<(), Report> {
     for l in content.lines() {
         let mut numbers: HashMap<usize, usize> = HashMap::new();
         for k in dmap.keys() {
-            let foo: Vec<(usize, &str)> = l.match_indices(k).collect::<Vec<(usize, &str)>>();
-            foo.iter().for_each(|(i, a)| {
+            let thing: Vec<(usize, &str)> = l.match_indices(k).collect::<Vec<(usize, &str)>>();
+            thing.iter().for_each(|(i, a)| {
                 numbers.insert(*i, *dmap.get(a).unwrap());
             });
         }

@@ -45,7 +45,7 @@ pub struct CrtMove {
 }
 
 impl CrtMove {
-    fn new(line: &str, re: Regex) -> Self {
+    fn new(line: &str, re: &Regex) -> Self {
         let cap = re.captures(line).unwrap();
         CrtMove {
             move_num: cap[1].parse::<usize>().unwrap(),
@@ -58,6 +58,7 @@ impl CrtMove {
 pub fn part1(content: String) -> Result<(), Report> {
     let mut manifest = true;
     let mut stack: HashMap<usize, CrtStack> = HashMap::new();
+    let re = Regex::new(r"^move\s(\d+)\sfrom\s(\d+)\sto\s(\d+)").unwrap();
     for l in content.lines() {
         if l.is_empty() {
             manifest = false;
@@ -83,8 +84,7 @@ pub fn part1(content: String) -> Result<(), Report> {
                 }
             }
         } else {
-            let re = Regex::new(r"^move\s(\d+)\sfrom\s(\d+)\sto\s(\d+)").unwrap();
-            let crt_move = CrtMove::new(l, re);
+            let crt_move = CrtMove::new(l, &re);
             for _ in (std::ops::Range {
                 start: 0,
                 end: crt_move.move_num,
@@ -103,6 +103,7 @@ pub fn part1(content: String) -> Result<(), Report> {
 pub fn part2(content: String) -> Result<(), Report> {
     let mut manifest = true;
     let mut stack: HashMap<usize, CrtStack> = HashMap::new();
+    let re = Regex::new(r"^move\s(\d+)\sfrom\s(\d+)\sto\s(\d+)").unwrap();
     for l in content.lines() {
         if l.is_empty() {
             manifest = false;
@@ -128,8 +129,7 @@ pub fn part2(content: String) -> Result<(), Report> {
                 }
             }
         } else {
-            let re = Regex::new(r"^move\s(\d+)\sfrom\s(\d+)\sto\s(\d+)").unwrap();
-            let crt_move = CrtMove::new(l, re);
+            let crt_move = CrtMove::new(l, &re);
             let col: &mut Vec<char> = &mut Vec::new();
             for _ in (std::ops::Range {
                 start: 0,
