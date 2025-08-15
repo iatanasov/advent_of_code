@@ -795,3 +795,113 @@ impl DayParts for Day11 {
         Ok(())
     }
 }
+
+pub struct Day12 {
+    pub content: String,
+}
+
+#[derive(Debug, Clone)]
+pub struct Level {
+    numbers: Vec<isize>,
+    brace: char,
+    red: bool,
+}
+impl Level {
+    pub fn new(brace: char) -> Self {
+        Level {
+            brace,
+            numbers: vec![],
+            red: false,
+        }
+    }
+
+    pub fn is_hash(&self) -> bool {
+        self.brace == '}' || self.brace == '{'
+    }
+    pub fn add(&mut self, n: isize) {
+        self.numbers.push(n);
+    }
+    pub fn sum(&self) -> isize {
+        self.numbers.iter().sum()
+    }
+}
+impl DayParts for Day12 {
+    fn part1(&mut self) -> Result<(), Report> {
+        let line = self.content.lines().next().unwrap().chars();
+        let mut sum: isize = 0;
+        let mut accum: Vec<char> = vec![];
+        for c in line {
+            if c.is_ascii_digit() || c == '-' {
+                accum.push(c);
+            } else if !accum.is_empty() {
+                let n: isize = accum.clone().into_iter().collect::<String>().parse()?;
+                sum += n;
+                accum.clear();
+            }
+        }
+        println!("{sum}");
+        Ok(())
+    }
+
+    fn part2(&mut self) -> Result<(), Report> {
+        let mut line = self.content.lines().next().unwrap().chars();
+        let mut accum: Vec<char> = vec![];
+        let mut levels: Vec<Level> = vec![];
+        let mut skip_next = false;
+        let mut c = None;
+        let sum = loop {
+            if !skip_next {
+                c = line.next();
+            }
+            skip_next = false;
+            let ch = c.unwrap();
+            if ch.is_ascii_digit() || ch == '-' {
+                accum.push(ch);
+            } else {
+                if !accum.is_empty() {
+                    if let Some(a) = levels.last_mut() {
+                        a.add(accum.clone().into_iter().collect::<String>().parse()?);
+                    }
+                    accum.clear();
+                }
+                if ch == '{' || ch == '[' {
+                    levels.push(Level::new(ch));
+                } else if ch == '}' || ch == ']' {
+                    if let Some(l) = levels.pop() {
+                        if levels.is_empty() {
+                            break l.sum();
+                        }
+                        if let Some(mut l2) = levels.pop() {
+                            if !l.red {
+                                l2.add(l.sum());
+                            }
+                            levels.push(l2);
+                        }
+                    }
+                } else if ch == '"' {
+                    c = line.next();
+                    skip_next = true;
+                    if c.unwrap() == 'r' {
+                        c = line.next();
+                        if c.unwrap() == 'e' {
+                            c = line.next();
+                            if c.unwrap() == 'd' {
+                                c = line.next();
+                                if c.unwrap() == '"' {
+                                    skip_next = false;
+                                    if let Some(level) = levels.last_mut() {
+                                        if level.is_hash() {
+                                            level.red = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+        println!("{sum}");
+        Ok(())
+    }
+}
