@@ -1,11 +1,13 @@
 use std::{
     char,
     collections::{HashMap, HashSet},
+    isize,
 };
 
 use aoc::year::DayParts;
 use color_eyre::Report;
 use regex::Regex;
+use tracing::info;
 
 pub struct Day1 {
     pub content: String,
@@ -902,6 +904,221 @@ impl DayParts for Day12 {
             }
         };
         println!("{sum}");
+        Ok(())
+    }
+}
+
+pub struct Day13 {
+    pub content: String,
+}
+#[derive(Clone, Debug)]
+pub struct Person {
+    pub name: String,
+    pub prefs: HashMap<String, isize>,
+}
+
+impl Person {
+    pub fn new(name: &str) -> Self {
+        Person {
+            name: name.to_owned(),
+            prefs: HashMap::new(),
+        }
+    }
+    pub fn add_pref(&mut self, pref: Pref) {
+        self.prefs.insert(pref.name, pref.happy);
+    }
+    pub fn happiness(&self, name: &str) -> isize {
+        if name == self.name {
+            0
+        } else {
+            match self.prefs.get(name) {
+                Some(n) => *n,
+                None => 0,
+            }
+        }
+    }
+    pub fn from_ppl(name: &str, ppl: &HashMap<String, Person>) -> Self {
+        ppl.get(name).unwrap().clone()
+    }
+}
+#[derive(Clone, Debug)]
+pub struct Pref {
+    pub name: String,
+    pub happy: isize,
+}
+
+impl Pref {
+    pub fn new(op: &str, value: &str, name: &str) -> Self {
+        let happy = if op == "lose" {
+            format!("-{}", value).parse::<isize>().unwrap()
+        } else {
+            value.parse::<isize>().unwrap()
+        };
+        Pref {
+            name: name.to_string(),
+            happy,
+        }
+    }
+}
+impl Day13 {
+    pub fn prefs(&self, line: &str, re: &Regex) -> (String, Pref) {
+        let cap = re.captures(line).unwrap();
+        (cap[1].to_string(), Pref::new(&cap[2], &cap[3], &cap[4]))
+    }
+}
+impl DayParts for Day13 {
+    fn part1(&mut self) -> Result<(), Report> {
+        let re = Regex::new(
+            r"^(\w+) would (lose|gain) (\d+) happiness units by sitting next to (\w+)\.",
+        )
+        .unwrap();
+        let mut ppl: HashMap<String, Person> = HashMap::new();
+
+        for line in self.content.lines() {
+            let p = self.prefs(line, &re);
+            if let Some(person) = ppl.get_mut(&p.0) {
+                person.add_pref(p.1);
+            } else {
+                let mut person = Person::new(&p.0);
+                person.add_pref(p.1);
+                ppl.insert(p.0.to_owned(), person);
+            }
+        }
+        let names: Vec<String> = ppl.keys().map(|k| k.to_owned()).collect();
+        let perms = perm(&names);
+        let max = perms
+            .into_iter()
+            .map(|pe| {
+                let mut all = pe.clone();
+                all.push(pe.first().unwrap().to_owned());
+                all.windows(2)
+                    .map(|names| {
+                        let p1 = Person::from_ppl(&names[0], &ppl);
+                        let p2 = Person::from_ppl(&names[1], &ppl);
+                        p1.happiness(&names[1]) + p2.happiness(&names[0])
+                    })
+                    .sum::<isize>()
+            })
+            .max();
+        println!("{}", max.unwrap());
+        Ok(())
+    }
+
+    fn part2(&mut self) -> Result<(), Report> {
+        let re = Regex::new(
+            r"^(\w+) would (lose|gain) (\d+) happiness units by sitting next to (\w+)\.",
+        )
+        .unwrap();
+        let mut ppl: HashMap<String, Person> = HashMap::new();
+        let me = Person::new("me");
+        let me_pref = Pref::new("gain", "0", &me.name.to_owned());
+        ppl.insert(me.name.to_owned(), me.clone());
+        for line in self.content.lines() {
+            let p = self.prefs(line, &re);
+            if let Some(person) = ppl.get_mut(&p.0) {
+                person.add_pref(p.1);
+            } else {
+                let mut person = Person::new(&p.0);
+                person.add_pref(p.1);
+                person.add_pref(me_pref.clone());
+                ppl.insert(p.0.to_owned(), person);
+                if let Some(m) = ppl.get_mut(&me.name) {
+                    m.add_pref(Pref::new("gain", "0", &p.0));
+                }
+            }
+        }
+        let names: Vec<String> = ppl.keys().map(|k| k.to_owned()).collect();
+
+        let perms = perm(&names);
+        let max = perms
+            .into_iter()
+            .map(|pe| {
+                let mut all = pe.clone();
+                all.push(pe.first().unwrap().to_owned());
+                all.windows(2)
+                    .map(|names| {
+                        let p1 = Person::from_ppl(&names[0], &ppl);
+                        let p2 = Person::from_ppl(&names[1], &ppl);
+                        p1.happiness(&names[1]) + p2.happiness(&names[0])
+                    })
+                    .sum::<isize>()
+            })
+            .max();
+        println!("{}", max.unwrap());
+        Ok(())
+    }
+}
+
+pub struct Day14 {
+    pub content: String,
+}
+#[derive(Clone, Debug)]
+pub struct Raindeer {
+    pub name: String,
+    pub speed: usize,
+    pub duration: usize,
+    pub rest: usize,
+    pub points: usize,
+}
+
+impl Raindeer {
+    pub fn distance(&self, seconds: usize) -> usize {
+        let cycles = seconds / (self.duration + self.rest);
+        let reminder = seconds % (self.duration + self.rest);
+        if self.duration >= reminder {
+            ((cycles * self.duration) + reminder) * self.speed
+        } else {
+            (cycles * self.duration + self.duration) * self.speed
+        }
+    }
+    pub fn point(&mut self) {
+        self.points += 1;
+    }
+}
+impl DayParts for Day14 {
+    fn part1(&mut self) -> Result<(), Report> {
+        let mut raindeers: Vec<Raindeer> = Vec::new();
+        let re = Regex::new(r"^(?<name>\w+) can fly (?<speed>\d+) km/s for (?<duration>\d+) seconds, but then must rest for (?<rest>\d+) seconds.").unwrap();
+        for line in self.content.lines() {
+            let cap = re.captures(line).unwrap();
+            raindeers.push(Raindeer {
+                name: cap["name"].to_string(),
+                speed: cap["speed"].parse::<usize>().unwrap(),
+                duration: cap["duration"].parse::<usize>().unwrap(),
+                rest: cap["rest"].parse::<usize>().unwrap(),
+                points: 0,
+            });
+        }
+        let m = raindeers.iter().map(|r| r.distance(2503)).max().unwrap();
+        println!("{m}");
+        Ok(())
+    }
+
+    fn part2(&mut self) -> Result<(), Report> {
+        let mut raindeers: Vec<Raindeer> = Vec::new();
+        let re = Regex::new(r"^(?<name>\w+) can fly (?<speed>\d+) km/s for (?<duration>\d+) seconds, but then must rest for (?<rest>\d+) seconds.").unwrap();
+        for line in self.content.lines() {
+            let cap = re.captures(line).unwrap();
+            raindeers.push(Raindeer {
+                name: cap["name"].to_string(),
+                speed: cap["speed"].parse::<usize>().unwrap(),
+                duration: cap["duration"].parse::<usize>().unwrap(),
+                rest: cap["rest"].parse::<usize>().unwrap(),
+                points: 0,
+            });
+        }
+        for s in 1..2504 {
+            let ticks: Vec<usize> = raindeers.iter().map(|r| r.distance(s)).collect();
+            let m = ticks.iter().max().unwrap();
+            ticks.iter().enumerate().for_each(|f| {
+                if f.1 == m {
+                    if let Some(raindeer) = raindeers.get_mut(f.0) {
+                        raindeer.point();
+                    }
+                }
+            })
+        }
+        println!("{}", raindeers.iter().map(|r| r.points).max().unwrap());
         Ok(())
     }
 }
